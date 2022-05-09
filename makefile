@@ -7,7 +7,7 @@ server: server.o
 
 client: client.o
 	$(CC) $(FLAGS) $^ -o client	
-	
+
 %.o: %.c
 	$(CC) -c $< -o $@
 clean:
