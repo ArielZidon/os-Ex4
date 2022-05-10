@@ -47,7 +47,7 @@ void* My_thread(int new_fd){
             strcpy(str, "make push");
         }
         else if(strncmp(str, "POP", 3) == 0){
-            strcpy(str, POP(&root));
+            POP(&root);
         }
         else if(strncmp(str, "TOP", 3) == 0){
             strcpy(str, TOP(&root));

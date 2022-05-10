@@ -40,7 +40,7 @@ char* TOP(Node** root){
     return curr->value;
 }
 
-char* POP(Node** root){
+void POP(Node** root){
     pthread_mutex_lock(&lock);
     if ((*root) == NULL){
         printf("ERROR: the stack is empty");
@@ -50,10 +50,11 @@ char* POP(Node** root){
     while(curr->next->next != NULL){
         curr = curr->next;
     }
+    free(curr->next);
     curr->next = NULL;
     pthread_mutex_unlock(&lock);
-    return curr->next->value;
 }
+
 void CLEAR(Node** root){
     pthread_mutex_lock(&lock);
     (*root)->next = NULL;
