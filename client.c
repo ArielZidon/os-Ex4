@@ -3,7 +3,7 @@
 */
 #include"stack.h"
 #include <stdio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 
 #define PORT "3490" // the port client will be connecting to 
-#define MAXDATASIZE 100 // max number of bytes we can get at once 
+#define MAXDATASIZE 1024 // max number of bytes we can get at once 
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa)

@@ -1,14 +1,20 @@
+.PHONY: all run clean
 CC = gcc
 FLAGS= 
-all: server client
+HEADERS = 
+all: server client clientsTest
 
 server: server.o
-	$(CC) $(FLAGS) -pthread $^ -o server
+	$(CC) $< -o server -lpthread
 
 client: client.o
-	$(CC) $(FLAGS) $^ -o client	
+	$(CC) $< -o client
 
+ClientTest: clientsTest.o
+	$(CC) $< -o clientsTest
+	
 %.o: %.c
 	$(CC) -c $< -o $@
+
 clean:
-	rm *.o server 
+	rm -f *.o server client clientsTest

@@ -3,7 +3,7 @@
 */
 #include"stack.h"
 #include <stdio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -35,9 +35,11 @@ void* My_thread(int new_fd){
         str[num] = '\0';
         printf("client: received '%s'\n",str);
 
-        if(strncmp(str, "EXIT", 5) == 0){
-            printf("GOOD BYE");
-            break;
+        if(strncmp(str, "EXIT", 4) == 0){
+            printf("GOOD BYE!!\n\n");
+            free(root);
+            close(new_fd);
+            return NULL;
         }
         else if(strncmp(str, "PUSH", 4) == 0){
             
@@ -51,6 +53,12 @@ void* My_thread(int new_fd){
         }
         else if(strncmp(str, "TOP", 3) == 0){
             strcpy(str, TOP(&root));
+        }
+        else{
+            printf("GOOD BYE\n\n");
+            free(root);
+            close(new_fd);
+            exit(1);
         }
         printf("%s\n", str);
         if(send(new_fd, str, strlen(str), 0) == -1){
@@ -70,8 +78,8 @@ void sigchld_handler(int s)
     while(waitpid(-1, NULL, WNOHANG) > 0);
 
     errno = saved_errno;
-}
 
+}
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa)
 {
@@ -101,6 +109,7 @@ int main(void)
 
     if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        free(root);
         return 1;
     }
 
@@ -115,6 +124,7 @@ int main(void)
         if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
                 sizeof(int)) == -1) {
             perror("setsockopt");
+            free(root);
             exit(1);
         }
 
@@ -131,11 +141,13 @@ int main(void)
 
     if (p == NULL)  {
         fprintf(stderr, "server: failed to bind\n");
+        free(root);
         exit(1);
     }
 
     if (listen(sockfd, BACKLOG) == -1) {
         perror("listen");
+        free(root);
         exit(1);
     }
 
@@ -144,6 +156,7 @@ int main(void)
     sa.sa_flags = SA_RESTART;
     if (sigaction(SIGCHLD, &sa, NULL) == -1) {
         perror("sigaction");
+        free(root);
         exit(1);
     }
 
@@ -165,5 +178,6 @@ int main(void)
 		pthread_create(&t1, NULL, &My_thread, new_fd);
 		
 	}
+    free(root);
     return 0;
 }

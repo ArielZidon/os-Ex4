@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <string.h>
 #include "memory.h"
 
@@ -62,4 +62,15 @@ void CLEAR(Node** root){
         (*root)->value[i] = '\0';
     }
     pthread_mutex_unlock(&lock);
+}
+
+void freeList(Node* head)
+{
+   struct Node* tmp;
+   while (head != NULL)
+    {
+       tmp = head;
+       head = head->next;
+       free(tmp);
+    }
 }
